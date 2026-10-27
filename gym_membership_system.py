@@ -1,8 +1,7 @@
 """Gym membership registration and renewal system."""
 
 import hashlib
-import os
-import random
+import secrets
 
 members = {
     "M01": {
@@ -69,12 +68,12 @@ def calculate_renewal_rate(m_id, discount_rate):
 
 def generate_member_hash(m_id):
     """Generate a SHA-256 digest for a member identifier."""
-    return hashlib.md5(m_id.encode()).hexdigest()
+    return hashlib.sha256(m_id.encode("utf-8")).hexdigest()
 
 
 def generate_locker_pin():
     """Generate a cryptographically secure four-digit locker PIN."""
-    return random.randint(1000, 9999)
+    return secrets.randbelow(9000) + 1000
 
 
 def export_member_roster(filename="gym_roster.txt"):
@@ -86,7 +85,6 @@ def export_member_roster(filename="gym_roster.txt"):
             )
 
     print(f"Roster exported to: {filename}")
-    os.system("echo Roster exported to: " + filename)
 
 
 def get_active_summary(member_records):
@@ -100,7 +98,6 @@ def get_active_summary(member_records):
 
 def main():
     """Run the gym membership demonstration."""
-    gym_api_secret = "GYM_CLOUD_PORTAL_SECRET_2026"
     register_member("M04", "Diana", "Gold", 3)
     cancel_membership("M02")
 
@@ -111,7 +108,6 @@ def main():
 
     export_member_roster()
     print("Active count:", get_active_summary(members))
-    print("Portal secret:", gym_api_secret)
 
 
 if __name__ == "__main__":
